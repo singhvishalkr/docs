@@ -50,6 +50,14 @@ Based on the `EMAIL_TRANSPORT` used, you must also provide additional variables.
 | `EMAIL_SES_CREDENTIALS__SECRET_ACCESS_KEY` | Your AWS SES secret key.    |               |
 | `EMAIL_SES_REGION`                         | Your AWS SES region.        |               |
 
+::callout{icon="material-symbols:warning-rounded" color="warning"}
+**IAM permissions for SES**
+
+When `EMAIL_VERIFY_SETUP` is `true` (the default), Directus probes SES at startup and on every `/server/health` request, so a least-privilege IAM policy needs more than `ses:SendRawEmail`. If the policy is too narrow, the health endpoint responds with `Converting circular structure to JSON` rather than a clear permissions error, because the nested AWS SDK response object leaks into the JSON serializer.
+
+Community-reported minimum actions and resources are documented in [directus/docs#618](https://github.com/directus/docs/issues/618); start from that policy if you need to scope SES access narrowly. If you're willing to skip the probe, setting `EMAIL_VERIFY_SETUP=false` avoids the extra IAM calls altogether.
+::
+
 ## Email Templates
 
 Templates can be used to add custom templates for your emails, or to override the system emails used for things like resetting a password or inviting a user.
