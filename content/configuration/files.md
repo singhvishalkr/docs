@@ -137,6 +137,26 @@ the storage driver(s) being used.
 
 ::
 
+::callout{icon="material-symbols:info-outline"}
+
+**Reading `Directus-File-Id` from browsers across origins**<br/>
+
+When a chunked upload finishes, Directus returns the resulting file id in a custom response header, `Directus-File-Id`, rather than in the response body. Browsers strip non-safelisted response headers unless the server opts them in with `Access-Control-Expose-Headers`, so if the Data Studio or your app is hosted on a different origin than the API, `Directus-File-Id` is not set by default and you need to add it to [`CORS_EXPOSED_HEADERS`](/configuration/security-limits#cors):
+
+```
+CORS_EXPOSED_HEADERS="Directus-File-Id"
+```
+
+If you already expose other headers, keep them comma-separated:
+
+```
+CORS_EXPOSED_HEADERS="Content-Range,Directus-File-Id"
+```
+
+This is only necessary when the browser and the Directus API are on different origins. Same-origin requests (including reverse-proxied setups where the API shares the app's origin) read the header without any CORS configuration.
+
+::
+
 ## Assets
 
 | Variable                                 | Description                                                                                                                          | Default Value |
