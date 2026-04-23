@@ -1,1 +1,3 @@
 Directus reads system collections to operate. Be careful when modifying the output of system collection `read` or `query` events. Also ensure not to directly or indirectly emit the same event your hook is handling or you will create an infinite loop.
+
+Database default values are applied by the database _after_ the payload reaches your hook, so fields left at their default are omitted from both `filter` and `action` hook payloads. If your hook needs the final stored record, query it explicitly inside the callback. As a rule of thumb: use field presets when you want a value to appear in the hook payload, and database defaults when it's fine for the hook to not see it.
