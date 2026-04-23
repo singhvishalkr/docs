@@ -5,11 +5,19 @@ description: Configuration for internal and output caching.
 
 :partial{content="config-env-vars"}
 
-Directus has a built-in data-caching option. Enabling this will cache the output of requests (based on the current user
-and exact query parameters used) into configured cache storage location. This drastically improves API performance, as
-subsequent requests are served straight from this cache. Enabling cache will also make Directus return accurate
-cache-control headers. Depending on your setup, this will further improve performance by caching the request in
-middleman servers (like CDNs) and even the browser.
+Directus has a built-in data-caching option. Enabling this will cache the output of requests into the configured cache
+storage location. This drastically improves API performance, as subsequent requests are served straight from this
+cache. Enabling cache will also make Directus return accurate cache-control headers. Depending on your setup, this will
+further improve performance by caching the request in middleman servers (like CDNs) and even the browser.
+
+::callout{icon="material-symbols:info-outline"}
+**How the cache key is derived**
+Cache keys are scoped by the Directus version, the current user ID, the request path (without the URL query string),
+the parsed Directus query parameters (such as `fields`, `filter`, `sort`, `limit`, etc.), and -- when the user's policy
+requires IP access rules -- the client IP. Raw URL query parameters are not part of the key by themselves, so adding an
+unused URL parameter such as `?cachebust=123` will not bypass the cache; change one of the Directus query parameters
+listed above to produce a new cache entry.
+::
 
 ::callout{icon="material-symbols:info-outline"}
 **Internal Caching**
