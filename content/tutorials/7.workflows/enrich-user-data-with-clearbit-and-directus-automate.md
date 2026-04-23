@@ -11,12 +11,16 @@ description: Learn how to integrate Clearbit data enrichment with Directus Autom
 ---
 
 ::callout{icon="material-symbols:warning-rounded" color="warning"}
-**Clearbit APIs are being sunset by HubSpot.** The free `logo.clearbit.com` Logo API stops responding on December 1,
-2025, and Clearbit's other standalone enrichment APIs (including the Person Enrichment endpoint used in this tutorial)
-are being migrated into [HubSpot Breeze Intelligence](https://developers.hubspot.com/changelog/upcoming-sunset-of-clearbits-free-logo-api).
-The pattern below — trigger a flow on `items.create`, call an external enrichment endpoint, write the response back onto
-`directus_users` — still applies verbatim; just swap the URL, auth header, and payload field paths for your chosen
-provider (HubSpot Breeze Intelligence, FullContact, Apollo, People Data Labs, etc.).
+Clearbit's Person Enrichment API (used in this tutorial) is no longer accepting new signups.
+Existing Clearbit and HubSpot customers can still call it, and the product is being folded into
+[HubSpot Breeze Intelligence](https://www.hubspot.com/products/breeze). Separately, the free
+`logo.clearbit.com` Logo API [shuts down on December 8, 2025](https://developers.hubspot.com/changelog/upcoming-sunset-of-clearbits-free-logo-api),
+but that endpoint is not used in this tutorial.
+
+If you already have Clearbit access, the flow below works as-is. If you're starting fresh, the same
+pattern (trigger on `items.create`, call an enrichment endpoint, write the response back onto
+`directus_users`) applies to any provider such as FullContact, Apollo, or People Data Labs; swap the
+URL, auth header, and response field paths to match.
 ::
 
 The Directus toolkit can be used for so many different projects and use cases, with a common one being Customer Relationship Management (CRM). CRMs are often used to support sales and marketing teams in understanding who is interested in and already using a product, and have more streamlined conversations with them.

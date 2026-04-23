@@ -1,0 +1,8 @@
+docs(clearbit): distinguish Enrichment API legacy access from Logo API sunset
+
+Bryant pointed out on #659 that the original callout conflated two states. Rewrote it so:
+
+- Person Enrichment API: closed to new signups, still works for existing Clearbit/HubSpot customers, being folded into Breeze Intelligence.
+- Logo API: hard sunset on December 8, 2025 (not used in this tutorial).
+
+Also corrected the sunset date on the leap-week tutorial callout from Dec 1 to Dec 8 per the HubSpot changelog.

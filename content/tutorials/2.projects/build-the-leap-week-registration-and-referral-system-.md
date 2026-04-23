@@ -177,7 +177,7 @@ export default defineNuxtConfig({
 ```
 
 ::callout{icon="material-symbols:warning-rounded" color="warning"}
-The `logo.clearbit.com` Logo API used in the proxy above [is being sunset by HubSpot on December 1, 2025](https://developers.hubspot.com/changelog/upcoming-sunset-of-clearbits-free-logo-api).
+The `logo.clearbit.com` Logo API used in the proxy above [is being sunset by HubSpot on December 8, 2025](https://developers.hubspot.com/changelog/upcoming-sunset-of-clearbits-free-logo-api).
 For new projects following this pattern, swap the proxy target for an alternative such as Brandfetch, Logo.dev, or a
 self-hosted asset pipeline.
 ::
