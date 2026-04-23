@@ -9,6 +9,16 @@ authors:
     title: Director, Developer Experience
 description: Learn how to integrate Clearbit data enrichment with Directus Automate.
 ---
+
+::callout{icon="material-symbols:warning-rounded" color="warning"}
+**Clearbit APIs are being sunset by HubSpot.** The free `logo.clearbit.com` Logo API stops responding on December 1,
+2025, and Clearbit's other standalone enrichment APIs (including the Person Enrichment endpoint used in this tutorial)
+are being migrated into [HubSpot Breeze Intelligence](https://developers.hubspot.com/changelog/upcoming-sunset-of-clearbits-free-logo-api).
+The pattern below — trigger a flow on `items.create`, call an external enrichment endpoint, write the response back onto
+`directus_users` — still applies verbatim; just swap the URL, auth header, and payload field paths for your chosen
+provider (HubSpot Breeze Intelligence, FullContact, Apollo, People Data Labs, etc.).
+::
+
 The Directus toolkit can be used for so many different projects and use cases, with a common one being Customer Relationship Management (CRM). CRMs are often used to support sales and marketing teams in understanding who is interested in and already using a product, and have more streamlined conversations with them.
 
 When a new user is created in Directus, directly through the Data Studio or through [Directus Auth](https://directus.io/toolkit/auth), you may only collect a small amount of information about them. Historically, you may have to then do manual research to understand who a person is before messaging them.
