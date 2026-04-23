@@ -3370,7 +3370,10 @@ paths:
   /items/{collection}:
     get:
       summary: List all items in a collection.
-      description: Returns a list of the items in the given collection.
+      description: |
+        Returns a list of the items in the given collection.
+
+        If the collection is configured as a singleton, this endpoint returns the single item for that collection as a plain object instead of an array. Use `readSingleton()` in the JS SDK.
       operationId: getCollectionItems
       parameters:
         - description: Unique identifier of the collection the item resides in.
@@ -3481,7 +3484,10 @@ paths:
             }
     patch:
       summary: Update Multiple Items
-      description: Update multiple items at the same time.
+      description: |
+        Update multiple items at the same time.
+
+        If the collection is configured as a singleton, send the plain item object in the request body (no `keys`/`query` envelope) and this endpoint will upsert the singleton. Use `updateSingleton()` in the JS SDK.
       operationId: updateItems
       parameters:
         - $ref: '#/components/parameters/Collection'
@@ -3602,104 +3608,6 @@ paths:
           source: |
             type Mutation {
               delete_<collection>_items(ids: [ID!]!): delete_many
-            }
-  /items/{collection}/singleton:
-    get:
-      summary: Retrieve a Singleton
-      description: |
-        Retrieves a singleton of a given collection.
-
-        The REST and GraphQL requests for singletons are the same as those used to Get Items but in contrast the response consists of a plain item object (the singleton) instead of an array of items.
-      operationId: getSingleton
-      parameters:
-        - $ref: '#/components/parameters/Collection'
-        - $ref: '#/components/parameters/Version'
-        - $ref: '#/components/parameters/Fields'
-        - $ref: '#/components/parameters/Meta'
-      responses:
-        '200':
-          description: Successful request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    $ref: '#/components/schemas/Items'
-        '401':
-          $ref: '#/components/responses/UnauthorizedError'
-        '404':
-          $ref: '#/components/responses/NotFoundError'
-      security: []
-      tags:
-        - Items
-      x-codeSamples:
-        - label: Directus SDK
-          lang: JavaScript
-          source: |
-            import { createDirectus, rest, readSingleton } from '@directus/sdk';
-
-            const client = createDirectus('directus_project_url').with(rest());
-
-            const result = await client.request(readSingleton(collection_name));
-        - label: GraphQL
-          lang: GraphQL
-          source: |
-            type Query {
-              <collection>(version: String): <collection>
-            }
-
-            type Query {
-              <collection>_by_version(version: String!): <collection_version_raw>
-            }
-    patch:
-      summary: Update Singleton
-      description: |
-        Update a singleton item.
-
-        The REST and GraphQL requests for singletons are the same as those used to Update Multiple Items but in contrast the request should consist of the plain item object.
-      operationId: updateSingleton
-      parameters:
-        - $ref: '#/components/parameters/Collection'
-        - $ref: '#/components/parameters/Fields'
-        - $ref: '#/components/parameters/Meta'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              anyOf:
-                - $ref: '#/components/schemas/Items'
-      responses:
-        '200':
-          description: Successful request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    $ref: '#/components/schemas/Items'
-        '401':
-          $ref: '#/components/responses/UnauthorizedError'
-        '404':
-          $ref: '#/components/responses/NotFoundError'
-      security: []
-      tags:
-        - Items
-      x-codeSamples:
-        - label: Directus SDK
-          lang: JavaScript
-          source: |
-            import { createDirectus, rest, updateSingleton } from '@directus/sdk';
-
-            const client = createDirectus('directus_project_url').with(rest());
-
-            const result = await client.request(updateSingleton(collection_name, partial_item_object));
-        - label: GraphQL
-          lang: GraphQL
-          source: |
-            type Mutation {
-              update_<collection>_items(data: [update_<collection>_input]): [<collection>]
             }
   /items/{collection}/{id}:
     get:
