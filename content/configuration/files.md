@@ -57,10 +57,13 @@ Based on your configured drivers, you must also provide additional variables, wh
 
 ### Google Cloud Storage (`gcs`)
 
-| Variable                          | Description                  | Default Value |
-| --------------------------------- | ---------------------------- | ------------- |
-| `STORAGE_<LOCATION>_KEY_FILENAME` | Path to key file on disk.    |               |
-| `STORAGE_<LOCATION>_BUCKET`       | Google Cloud Storage bucket. |               |
+| Variable                          | Description                                                                                                                                                          | Default Value |
+| --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| `STORAGE_<LOCATION>_KEY_FILENAME` | Path to the service account key file on disk.                                                                                                                        |               |
+| `STORAGE_<LOCATION>_CREDENTIALS`  | Inline service account key as a JSON object, passed through to the Google Cloud Storage client. Use the `json:` prefix, for example `json:{"client_email":"..."}`.   |               |
+| `STORAGE_<LOCATION>_BUCKET`       | Google Cloud Storage bucket.                                                                                                                                         |               |
+
+Set either `STORAGE_<LOCATION>_KEY_FILENAME` or `STORAGE_<LOCATION>_CREDENTIALS`, not both. `KEY_FILENAME` is useful when mounting the key as a Docker secret or volume; `CREDENTIALS` is useful when the hosting platform injects the key as an environment variable. See the [Environment Syntax Prefix](/configuration#environment-syntax-prefix) section for how the `json:` prefix is parsed.
 
 ### Azure (`azure`)
 
