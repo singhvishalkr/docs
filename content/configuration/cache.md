@@ -5,11 +5,26 @@ description: Configuration for internal and output caching.
 
 :partial{content="config-env-vars"}
 
-Directus has a built-in data-caching option. Enabling this will cache the output of requests (based on the current user
-and exact query parameters used) into configured cache storage location. This drastically improves API performance, as
-subsequent requests are served straight from this cache. Enabling cache will also make Directus return accurate
-cache-control headers. Depending on your setup, this will further improve performance by caching the request in
-middleman servers (like CDNs) and even the browser.
+Directus has a built-in data-caching option. Enabling this will cache the output of requests into the configured cache
+storage location. This drastically improves API performance, as subsequent requests are served straight from this
+cache. Enabling cache will also make Directus return accurate cache-control headers. Depending on your setup, this will
+further improve performance by caching the request in middleman servers (like CDNs) and even the browser.
+
+The cache key is derived from the following:
+
+- The Directus version
+- The current user ID (or unauthenticated)
+- The request path (the URL path, excluding any query string)
+- The parsed Directus [Global Query Parameters](/guides/connect/query-parameters) (e.g. `fields`, `filter`, `sort`,
+  `limit`, `offset`, `page`, `search`, `deep`, `alias`, `aggregate`, `groupBy`, `backlink`, `export`, `version`) — not
+  arbitrary URL query parameters. For GraphQL requests, the parsed query and variables are used
+- The client IP, but only when a policy applied to the current user has an IP access filter that matches the request IP
+- For `/flows/trigger/{id}` endpoints, any raw query parameters whose names are listed in that flow's `cacheQueryParams`
+  option
+
+Arbitrary URL query parameters outside the list above do not act as a cache buster on their own; add a recognised
+parameter (for example `?version=...`), clear the cache, or disable caching per-request with `Cache-Control: no-store`
+(requires `CACHE_SKIP_ALLOWED=true`) if you need to bypass the cache.
 
 ::callout{icon="material-symbols:info-outline"}
 **Internal Caching**
