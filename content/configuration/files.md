@@ -126,6 +126,12 @@ This feature requires the `PUBLIC_URL` to be set correctly to [where your API is
 
 ::
 
+::callout{icon="material-symbols:info-outline"}
+
+When calling the TUS endpoints from a browser on a different origin than the API, the uploaded file's ID is returned in a `Directus-File-Id` response header. Browsers only expose custom response headers to JavaScript when they are listed in `Access-Control-Expose-Headers`, so add `Directus-File-Id` to [`CORS_EXPOSED_HEADERS`](/configuration/security-limits#cors) (which defaults to `Content-Range`) so your frontend can read it.
+
+::
+
 ::callout{icon="material-symbols:warning-rounded" color="warning"}
 
 **Chunked Upload Restrictions**<br/>
@@ -161,3 +167,4 @@ Image transformations can be heavy on memory usage. If you're using a system wit
 | `IMPORT_EXPORT_NAMESPACE` | Redis namespace for storing import/export information | `import-export` |
 | `IMPORT_TIMEOUT`          | Allowed duration for importing files                  | `1m`            |
 | `IMPORT_CONCURRENT_MAX`   | Maximum simultainous imports                          | `10`            |
+
