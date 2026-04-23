@@ -26,6 +26,11 @@ For each of the auth providers listed, you must provide the following configurat
 Cookie and session configuration settings such as `REFRESH_TOKEN_COOKIE_*`, `SESSION_COOKIE_*`, and related security parameters can be found in [Security & Limits](/configuration/security-limits).
 ::
 
+::callout{icon="material-symbols:info-outline"}
+**Cookie-mode providers are hidden from the Data Studio login page.**<br/>
+Only providers in the default `session` mode render a sign-in button on `/admin/login`. Providers configured with `AUTH_<PROVIDER>_MODE=cookie` are still fully functional for programmatic and API sign-in flows but will not appear on the Studio login screen (see [directus/directus#21874](https://github.com/directus/directus/pull/21874)). If an expected provider is missing from the login page, confirm that its `AUTH_<PROVIDER>_MODE` is set to `session`.
+::
+
 Based on your configured drivers, you must also provide additional variables, where `<PROVIDER>` is the capitalized name of the item in the `AUTH_PROVIDERS` value.
 
 ::callout{icon="material-symbols:warning-rounded" color="warning"}
