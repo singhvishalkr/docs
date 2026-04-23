@@ -50,6 +50,42 @@ Based on the `EMAIL_TRANSPORT` used, you must also provide additional variables.
 | `EMAIL_SES_CREDENTIALS__SECRET_ACCESS_KEY` | Your AWS SES secret key.    |               |
 | `EMAIL_SES_REGION`                         | Your AWS SES region.        |               |
 
+#### Required IAM Permissions
+
+The IAM user or role whose credentials you use above needs permission to send raw emails and to query account-level
+sending state for the `/server/health` check. A minimal policy looks like this:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "DirectusSesSend",
+      "Effect": "Allow",
+      "Action": "ses:SendRawEmail",
+      "Resource": [
+        "arn:aws:ses:<region>:<account-id>:identity/<your-verified-sender-domain-or-address>"
+      ]
+    },
+    {
+      "Sid": "DirectusSesHealthCheck",
+      "Effect": "Allow",
+      "Action": "ses:GetAccount",
+      "Resource": "*"
+    }
+  ]
+}
+```
+
+- `ses:SendRawEmail` is the action the SES transport invokes to deliver every outbound message. Scope the resource to the
+  sender identities (domain or email address) you will send from in `EMAIL_FROM`.
+- `ses:GetAccount` is called by the `/server/health` endpoint's email probe. Without it the probe emits an opaque
+  `Converting circular structure to JSON` error even though email delivery otherwise works. `ses:GetAccount` does not
+  support resource-level permissions and must be granted on `*`.
+
+If you set a sender identity that lives in a different SES region from `EMAIL_SES_REGION`, include the identity ARN for
+that region as well.
+
 ## Email Templates
 
 Templates can be used to add custom templates for your emails, or to override the system emails used for things like resetting a password or inviting a user.
