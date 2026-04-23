@@ -50,7 +50,7 @@ const imageSrc = (article: { technologies?: string[] }) => {
 						alt="Generated Image"
 					>
 					<div class="col-span-2">
-						<ProseP class="text-gray-900 dark:text-white text-base truncate font-bold text-pretty">
+						<ProseP class="text-gray-900 dark:text-white text-base line-clamp-2 font-bold text-pretty">
 							{{ article.title }}
 						</ProseP>
 						<ProseP class="text-[15px] text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">
