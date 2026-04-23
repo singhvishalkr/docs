@@ -50,6 +50,19 @@ Based on the `EMAIL_TRANSPORT` used, you must also provide additional variables.
 | `EMAIL_SES_CREDENTIALS__SECRET_ACCESS_KEY` | Your AWS SES secret key.    |               |
 | `EMAIL_SES_REGION`                         | Your AWS SES region.        |               |
 
+::callout{icon="material-symbols:info-outline"}
+
+**Required IAM permissions**<br/>
+
+For the SES transport to both send email and pass the `/server/health` check, the IAM identity used by `EMAIL_SES_CREDENTIALS__ACCESS_KEY_ID` needs:
+
+- **Actions**: `ses:GetAccount` and `ses:SendRawEmail`.
+- **Resources**: the verified SES identity that matches `EMAIL_FROM`, plus the dummy identity `arn:aws:ses:<EMAIL_SES_REGION>:<account-id>:identity/invalid@invalid` that Directus hits during the email health check.
+
+If `ses:GetAccount` or the `invalid@invalid` identity is missing, password-reset emails still send but `/server/health` returns a confusing `Converting circular structure to JSON` error.
+
+::
+
 ## Email Templates
 
 Templates can be used to add custom templates for your emails, or to override the system emails used for things like resetting a password or inviting a user.
