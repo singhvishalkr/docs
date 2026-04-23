@@ -8911,6 +8911,7 @@ paths:
         content:
           application/json:
             schema:
+              type: object
               properties:
                 format:
                   type: string
@@ -8950,6 +8951,7 @@ paths:
         content:
           application/json:
             schema:
+              type: object
               properties:
                 string:
                   type: string
@@ -8991,6 +8993,7 @@ paths:
         content:
           application/json:
             schema:
+              type: object
               properties:
                 string:
                   type: string
@@ -9124,6 +9127,7 @@ paths:
         content:
           application/json:
             schema:
+              type: object
               properties:
                 item:
                   type: number
