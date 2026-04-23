@@ -33,3 +33,30 @@ This includes:
 **Note**  
 `DB_SSL__CA_FILE` may be preferred to load the CA directly from a file.
 ::
+
+## Self-Signed Certificates
+
+Managed databases such as Heroku Postgres or DigitalOcean Managed PostgreSQL typically require SSL with a self-signed CA certificate. Node's default TLS trust store does not include those CAs, so a bare connection fails with:
+
+```
+Error: self-signed certificate in certificate chain
+    code: 'SELF_SIGNED_CERT_IN_CHAIN'
+```
+
+Point Directus at the provider-issued CA file (in PEM format) using the built-in `DB_SSL__*` variables:
+
+```
+DB_CONNECTION_STRING=postgresql://user:pass@host:5432/db
+DB_SSL__REJECT_UNAUTHORIZED=true
+DB_SSL__CA_FILE=/absolute/path/to/managed-ca.crt
+```
+
+Alternatively, add the CA to Node's global trust store with [`NODE_EXTRA_CA_CERTS`](https://nodejs.org/api/cli.html#node_extra_ca_certsfile), which also applies to other outbound TLS connections Directus makes (SMTP, external webhooks, and so on):
+
+```
+NODE_EXTRA_CA_CERTS=/absolute/path/to/managed-ca.crt
+```
+
+::callout{icon="material-symbols:warning-rounded" color="warning"}
+**Do not set `DB_SSL__REJECT_UNAUTHORIZED=false` (or the process-wide `NODE_TLS_REJECT_UNAUTHORIZED=0`) in production.** It disables verification of the server's certificate entirely, not just the CA chain, which exposes database traffic to man-in-the-middle attacks. Provide the managed provider's CA file instead.
+::
