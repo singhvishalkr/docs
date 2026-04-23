@@ -3481,7 +3481,14 @@ paths:
             }
     patch:
       summary: Update Multiple Items
-      description: Update multiple items at the same time.
+      description: |
+        Update multiple items at the same time.
+
+        Choose between three body formats:
+
+        - An **array** of item objects that include the primary key -- each object is upserted in a batch (`updateBatch`).
+        - An object with `data` and `keys` -- applies the same partial `data` to every item whose primary key is listed in `keys` (`updateMany`).
+        - An object with `data` and `query` -- applies the same partial `data` to every item that matches the query, using the same [filter syntax](/guides/connect/filter-rules) accepted by the `GET` endpoint (`updateByQuery`).
       operationId: updateItems
       parameters:
         - $ref: '#/components/parameters/Collection'
@@ -3496,17 +3503,33 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - data
-                - keys
-              properties:
-                data:
-                  $ref: '#/components/schemas/Items'
-                keys:
-                  type: array
+              anyOf:
+                - type: array
+                  description: Array of item objects to batch-update. Each object must include its primary key.
                   items:
-                    type: string
+                    $ref: '#/components/schemas/Items'
+                - type: object
+                  description: Update items by primary key (`updateMany`). The same `data` is applied to every item whose key is listed.
+                  required:
+                    - data
+                    - keys
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/Items'
+                    keys:
+                      type: array
+                      items:
+                        type: string
+                - type: object
+                  description: Update items by query (`updateByQuery`). The same `data` is applied to every item matched by the query.
+                  required:
+                    - data
+                    - query
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/Items'
+                    query:
+                      $ref: '#/components/schemas/Query'
       responses:
         '200':
           description: Successful request
@@ -3545,7 +3568,14 @@ paths:
             }
     delete:
       summary: Delete Multiple Items
-      description: Delete multiple items at the same time.
+      description: |
+        Delete multiple items at the same time.
+
+        Choose between three body formats:
+
+        - An **array** of primary keys -- every item with a matching key is deleted (`deleteMany`).
+        - An object with `keys` -- same as the array form, for consistency with the update endpoints (`deleteMany`).
+        - An object with `query` -- every item that matches the query is deleted, using the same [filter syntax](/guides/connect/filter-rules) accepted by the `GET` endpoint (`deleteByQuery`).
       operationId: deleteItems
       parameters:
         - $ref: '#/components/parameters/Collection'
@@ -3562,18 +3592,25 @@ paths:
             schema:
               anyOf:
                 - type: array
-                  description: Primary keys of items to be deleted.
+                  description: Primary keys of items to be deleted (`deleteMany`).
                   items:
                     type: string
                 - type: object
-                  description: Object containing either `keys` or `query` to selected what items to update.
+                  description: Delete items by primary key (`deleteMany`).
+                  required:
+                    - keys
                   properties:
                     keys:
                       type: array
                       items:
                         type: string
-                    items:
-                      type: object
+                - type: object
+                  description: Delete items by query (`deleteByQuery`). Every item matched by the query is deleted.
+                  required:
+                    - query
+                  properties:
+                    query:
+                      $ref: '#/components/schemas/Query'
       responses:
         '204':
           description: The resource was deleted successfully.
